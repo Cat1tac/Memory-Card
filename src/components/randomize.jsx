@@ -1,10 +1,9 @@
 import useFetchedData from "./fetchData";
-
+import "../styles/pokemonList.css"
 
 export default function Randomize({score, setScore, bestScore, setBestScore, saved, setSaved}){
     const {pokemon, error, loading} = useFetchedData(score);
-    
-        
+           
     if (loading) return <p>Loading Images</p>
     if (error) return <p>{error}</p>
 
@@ -24,7 +23,7 @@ export default function Randomize({score, setScore, bestScore, setBestScore, sav
     }
 
     return (
-        <div>
+        <div className="pokemonDiv">
             {pokemon.map((pocketmon) => {
                 return <img key={pocketmon.dex} src={pocketmon.link} id={pocketmon.dex} onClick={handleReset}/>
             })}

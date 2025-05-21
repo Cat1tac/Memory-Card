@@ -11,11 +11,11 @@ function App() {
 
   return (
     <>
-      <div>
+      <div className="score">
           <p>Score: {score}</p>
           <p>Best Score: {bestScore}</p>
       </div>
-      <h1>Poké Memory</h1>
+      <h1>Poké Memory</h1> 
       <Randomize 
         score={score}
         setScore={setScore}

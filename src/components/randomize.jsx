@@ -1,60 +1,25 @@
-import { useState, useEffect, cache } from "react";
+import useFetchedData from "./fetchData";
+
 
 export default function Randomize({score, setScore, bestScore, setBestScore, saved, setSaved}){
-    const [pokemon, setPokemon] = useState([]);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const {pokemon, error, loading} = useFetchedData(score);
     
-    //Make into function so can call it in the next function
-    useEffect(() => {
-        let ignore = false;
-        const dexNumSet = [];
-
-        //Populate Set With unique dex numbers
-        for(let i = 0; i < 10; i++){
-            let dexNum = Math.floor(Math.random() * (386 - 252) + 252);
-            while (dexNumSet.includes(dexNum)){
-                dexNum = Math.floor(Math.random() * (386 - 252) + 252);
-            }
-            dexNumSet.push(dexNum);
-        }
         
-        for(let i = 0; i < dexNumSet.length; i++){
-            cache(fetch(`https://pokeapi.co/api/v2/pokemon/${dexNumSet[i]}`, {mode: "cors"})
-            .then((response) => {
-                if (response.status >= 400) {
-                   throw new Error
-                }
-                return response.json();
-            }) 
-            .then((response) => {
-               if(!ignore){
-                    setPokemon(pokemon => [...pokemon, {dex: dexNumSet[i], link:response.sprites.versions["generation-v"]["black-white"].animated.front_default}]) 
-                }
-            })
-            .catch((error) => setError(error))
-            .finally(() => setLoading(false)))
-        }
-
-        return () => {
-            ignore = true;
-        }
-    }, []);
-        
-    
     if (loading) return <p>Loading Images</p>
     if (error) return <p>{error}</p>
 
     function handleReset(e) {
+        //Increases score, resets pokemon on screen, 
+        // and adds clicked pokemon to a set of all clicked pokemon in current game
         if(!saved.has(e.target.id)){
             setSaved(saved.add(e.target.id));
             setScore(score + 1);
         } else {
+            //Increses best score, clears score and clears all pokemon in saved pokemon
             setBestScore(bestScore >= score ? bestScore : score);
             setScore(score = 0);
             saved.clear();
             setSaved(saved);
-            Randomize({score, setScore, bestScore, setBestScore, saved, setSaved})
         }
     }
 

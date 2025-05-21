@@ -4,6 +4,7 @@ import './App.css'
 
 
 function App() {
+  //Tracks score and which pokemon have been clicked already
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
   const [saved, setSaved] = useState(new Set());
